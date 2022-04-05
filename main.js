@@ -41,7 +41,7 @@ bot.on("ready", async () => {
   
   });
 
-function jZRqZvefc66LH82737BVXP2zEHUA(req,res){
+function webData(req,res){
     db.query(`select *from users_data order by balance DESC;`, (err,rows) =>{
         output = ""
         for(let s in rows){
@@ -61,7 +61,7 @@ const server = http.createServer(function(req, res){
             res.write(404)
             res.write('Error: File Not Found')
         }else{
-            jZRqZvefc66LH82737BVXP2zEHUA(req,res)
+            webData(req,res)
             
         }
 
@@ -138,7 +138,8 @@ bot.on('messageCreate', async message =>{
             author = message.author.id;
             sql = "UPDATE `eco_db`.`users_data` SET `balance` = '"+amount+"' WHERE (`idusers_data` = '"+author+"');"
             db.query(sql);
-            console.log(`Updated ${message.author.id} balance to ${amount}`);
+            console.log(`UPDATE ${message.author.id} TO ${amount}`);
+            
         }
 
     })
