@@ -3,7 +3,12 @@ const intents = new Discord.Intents(32767);
 const bot = new Discord.Client({intents});
 const mysql = require('mysql');
 const fs = require("fs");
+const express = require('express');
 const { token } = require('./token.json');
+const bodyParser = require('body-parser');
+const helmet = require('helmet');
+const rateLimit = require("express-rate-limit");
+const http = require('http');
 bot.commands = new Discord.Collection();
 bot.aliases = new Discord.Collection();
 const db = mysql.createConnection({
@@ -14,15 +19,39 @@ const db = mysql.createConnection({
 });
 const eco_prefix = "ECO_DB: "
 
-//port 
-const http = require('http');
-const port = 3000;
-
-
-
-
 module.exports = {db};
 
+const limiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 100 // limit each IP to 100 requests per windowMs
+  });
+
+const app = express();
+const port = 3000;
+const server = http.createServer(app);
+app.get('/', (req, res) => {
+    db.query(`select *from users_data order by balance DESC;`, (err,rows) =>{
+        output = ""
+        for(let s in rows){
+            if(s < 10){
+                output += ("\n" + "<" + `${rows[s].idusers_data}` + ">" + " - $" + rows[s].balance + "")
+            }
+        }
+        res.write(output)
+        res.end()
+    })
+  })
+  
+server.listen(port, () => {
+    console.log(`Example app listening on port ${port}`)
+})
+
+app.use(limiter);
+app.use(helmet());
+
+/*
+
+const port = 3000;
 
 db.connect(err =>{
     if(err) throw err;
@@ -69,9 +98,6 @@ const server = http.createServer(function(req, res){
 
 })
 
-
-
-
 server.listen(port, function(error){
     if(error){
         console.log("Something went wrong", error)
@@ -80,6 +106,7 @@ server.listen(port, function(error){
     }
 })
 
+*/
 
 
 
