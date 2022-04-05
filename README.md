@@ -1,2 +1,3 @@
 
-# economyBot linked created with discord.js integrated with mysql
+#economyBot
+economyBot linked created with discord.js integrated with mysql
