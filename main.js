@@ -138,8 +138,15 @@ bot.on('messageCreate', async message =>{
             author = message.author.id;
             sql = "UPDATE `eco_db`.`users_data` SET `balance` = '"+amount+"' WHERE (`idusers_data` = '"+author+"');"
             db.query(sql);
-            console.log(`UPDATE ${message.author.id} TO ${amount}`);
-            
+            var currentdate = new Date(); 
+            var datetime = "Date Time: " + currentdate.getDate() + "/"
+                + (currentdate.getMonth()+1)  + "/" 
+                + currentdate.getFullYear() + " @ "  
+                + currentdate.getHours() + ":"  
+                + currentdate.getMinutes() + ":" 
+                + currentdate.getSeconds();
+            console.log(`UPDATE ${message.author.id} TO ${amount} : ` + datetime);
+
         }
 
     })
