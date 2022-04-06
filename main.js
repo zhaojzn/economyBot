@@ -17,9 +17,11 @@ const db = mysql.createConnection({
     password: "root",
     database: "eco_db"
 });
-const eco_prefix = "ECO_DB: "
 
 module.exports = {db};
+
+
+const eco_prefix = "ECO_DB:"
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -29,34 +31,43 @@ const limiter = rateLimit({
 const app = express();
 const port = 3000;
 const server = http.createServer(app);
+
+module.exports = {app};
+
+
+const TEST = [
+    {id: 0, userName: 'Test'}
+]
+
+app.get('/api/get/test', (req, res) =>{
+    bot.channels.cache.get("918659190925426739").send("a post from http://127.0.0.1:3000/")
+    res.json(TEST)
+})
 app.get('/', (req, res) => {
-    db.query(`select *from users_data order by balance DESC;`, (err,rows) =>{
-        output = ""
-        for(let s in rows){
-            if(s < 10){
-                output += ("\n" + "<" + `${rows[s].idusers_data}` + ">" + " - $" + rows[s].balance + "")
-            }
+    fs.readFile('index.html', function(error, data){
+        if(error){
+            res.write(404)
+            res.write('Error: File Not Found')
+        }else{
+            res.write(data)
+            console.log("packet data")
         }
-        res.write(output)
-        res.end()
     })
   })
   
 server.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    console.log(`Website app listening on port ${port}`)
+    console.log( `http://127.0.0.1:${ port }` )
 })
-
-app.use(limiter);
-app.use(helmet());
-
-/*
-
-const port = 3000;
 
 db.connect(err =>{
     if(err) throw err;
     console.log("Connected to database");
 })
+
+
+
+
 
 bot.on("ready", async () => {
 
@@ -69,47 +80,6 @@ bot.on("ready", async () => {
     }, 5000);
   
   });
-
-function webData(req,res){
-    db.query(`select *from users_data order by balance DESC;`, (err,rows) =>{
-        output = ""
-        for(let s in rows){
-            if(s < 10){
-                output += ("\n" + "<" + `${rows[s].idusers_data}` + ">" + " - $" + rows[s].balance + "<br>")
-            }
-        }
-        res.write(output)
-        res.end()
-    })
-}
-
-const server = http.createServer(function(req, res){
-    res.writeHead(200, { 'Content-Type' : 'text/html'})
-    fs.readFile('index.html', function(error, data){
-        if(error){
-            res.write(404)
-            res.write('Error: File Not Found')
-        }else{
-            webData(req,res)
-            
-        }
-
-    })
-
-})
-
-server.listen(port, function(error){
-    if(error){
-        console.log("Something went wrong", error)
-    }else{
-        console.log('Server is listening on port ' + port)
-    }
-})
-
-*/
-
-
-
 
 
 fs.readdir("./commands/", (err, files) => {

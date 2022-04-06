@@ -6,8 +6,18 @@
     <title>Document</title>
 </head>
 <body>
+    <button id="list">This is a test button</button>
 </body>
-
-
+<script>
+    let btn = document.querySelector('#list')
+    btn.addEventListener('click', e => {
+        e.preventDefault()
+        fetch(`http://127.0.0.1:3000/api/get/test`, {
+            method: 'GET'
+        })
+        .then( raw => raw.json())
+        .then( data => console.log(data))
+    })
+</script>
 </html>
 |
